@@ -26,6 +26,9 @@ public class Sorteo implements Serializable {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "sorteo")
     private List<Apuesta> apuestas = new ArrayList<>();
 
+    @Column(nullable = true)
+    private int numeroGanadorSecreto;
+
 
     public void agregarNumeroApostado(NumeroApostado numeroApostado) {
         numerosApostados.add(numeroApostado);
