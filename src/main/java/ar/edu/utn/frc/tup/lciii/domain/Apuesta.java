@@ -16,10 +16,23 @@ public class Apuesta implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-
+    private String id_cliente;
 
     private int numeroApostado;
-    private double montoApostado;
+    private int montoApostado;
+
+    @JoinColumn(name = "id_sorteo", referencedColumnName = "id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Sorteo sorteo;
+
+
+
+    @Override
+    public boolean equals(Object o){
+        if(this==o) return true;
+        if(! (o instanceof Apuesta)) return false;
+        return id != null && id.equals(( (Apuesta) o) .getId());
+    }
+
 
 }

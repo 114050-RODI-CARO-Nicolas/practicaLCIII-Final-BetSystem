@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,18 +18,35 @@ public class Sorteo implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDate fecha;
-    private double totalEnReserva;
+    private int totalEnReserva;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "sorteo")
+    private List<NumeroApostado> numerosApostados = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "sorteo")
+    private List<Apuesta> apuestas = new ArrayList<>();
 
 
-    @JoinColumn(name = "sorteo_id")
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<NumeroSorteado> numerosSorteados;
+    public void agregarNumeroApostado(NumeroApostado numeroApostado) {
+        numerosApostados.add(numeroApostado);
+        numeroApostado.setSorteo(this);
+    }
 
+    public void quitarNumeroApostado(NumeroApostado numeroApostado) {
+       numerosApostados.remove(numeroApostado);
+       numeroApostado.setSorteo(null);
+    }
 
-    @JoinColumn(name = "sorteo_id")
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Apuesta> apuestas;
+    public void agregarApuesta(Apuesta apuesta){
+        apuestas.add(apuesta);
+        apuesta.setSorteo(this);
+    }
 
+    public void quitarApuesta(Apuesta apuesta)
+    {
+        apuestas.remove(apuesta);
+        apuesta.setSorteo(null);
+    }
 
 
 
