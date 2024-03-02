@@ -210,10 +210,10 @@ public class SorteoServiceImplementation implements ISorteoService {
 
     public int obtenerGanancia(int montoApostado, int porcentajeGanancia)
     {
-        //Sumar el montoAPostado + el porcentaje de ganancia de ese monto
+        //Solamente devolver el porcentajeGanancia del montoAPostado
 
         int resultado;
-        resultado = montoApostado + ( (porcentajeGanancia / 100) * montoApostado );
+        resultado = ( (porcentajeGanancia / 100) * montoApostado );
         return resultado;
 
     }
