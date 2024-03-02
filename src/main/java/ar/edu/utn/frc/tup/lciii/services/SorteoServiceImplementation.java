@@ -76,6 +76,12 @@ public class SorteoServiceImplementation implements ISorteoService {
         responseDTO.setMontoApostado(apuesta.getMontoApostado());
         responseDTO.setId_cliente(apuesta.getId_cliente());
         responseDTO.setNumero(apuesta.getNumeroApostado());
+
+        if(compararCifras(sorteoEncontrado.getNumeroGanadorSecreto(), apuesta.getNumeroApostado()) > 2 ) {
+            responseDTO.setResultado("GANADOR");
+        } else {
+            responseDTO.setResultado("PIERDE");
+        }
         return responseDTO;
 
     }
@@ -139,6 +145,26 @@ public class SorteoServiceImplementation implements ISorteoService {
         Random random = new Random();
         int randomInt=random.nextInt( max-min+1   ) + min;
         return randomInt;
+    }
+
+    public static int compararCifras(int referencia, int aComparar)
+    {
+
+        String cadenaReferencia = String.valueOf(referencia);
+        String cadenaComparar = String.valueOf(aComparar);
+
+        int cantidadCoincidencias = 0;
+
+        for (int i = 0; i < cadenaReferencia.length(); i++) {
+            char cifraReferencia = cadenaReferencia.charAt(i);
+
+            if(cadenaComparar.contains(String.valueOf(cifraReferencia))) {
+                cantidadCoincidencias++;
+                cadenaComparar=cadenaComparar.replaceFirst(String.valueOf(cifraReferencia), "");
+
+            }
+        }
+        return cantidadCoincidencias;
     }
 
 
