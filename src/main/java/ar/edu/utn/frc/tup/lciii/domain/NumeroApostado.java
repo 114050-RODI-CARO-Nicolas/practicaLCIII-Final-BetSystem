@@ -14,8 +14,8 @@ public class NumeroApostado implements Serializable {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private long id;
-    private int numero;
+    private Long id;
+    private Integer numero;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_sorteo", referencedColumnName = "id")

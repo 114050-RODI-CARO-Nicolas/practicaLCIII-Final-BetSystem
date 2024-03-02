@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @Setter
 public class NuevoSorteoResponseDTO implements Serializable {
     public LocalDate fecha;
-    public long id;
+    public Long id;
     public int totalEnReserva;
 
 }

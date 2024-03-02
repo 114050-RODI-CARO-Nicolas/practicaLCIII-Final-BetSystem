@@ -18,8 +18,16 @@ public class Apuesta implements Serializable {
 
     private String id_cliente;
 
-    private int numeroApostado;
-    private int montoApostado;
+    private Integer numeroApostado;
+    private Integer montoApostado;
+
+
+   // @Column(nullable = true)
+    private Integer porcentajeGanancia;
+
+   // @Column(nullable = true)
+    private Integer montoGanado;
+
 
     @JoinColumn(name = "id_sorteo", referencedColumnName = "id")
     @ManyToOne(cascade = CascadeType.ALL)

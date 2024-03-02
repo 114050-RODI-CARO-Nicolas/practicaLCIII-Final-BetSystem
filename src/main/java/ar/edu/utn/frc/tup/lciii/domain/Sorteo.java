@@ -18,7 +18,7 @@ public class Sorteo implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDate fecha;
-    private int totalEnReserva;
+    private Integer totalEnReserva;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "sorteo")
     private List<NumeroApostado> numerosApostados = new ArrayList<>();
@@ -26,8 +26,8 @@ public class Sorteo implements Serializable {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "sorteo")
     private List<Apuesta> apuestas = new ArrayList<>();
 
-    @Column(nullable = true)
-    private int numeroGanadorSecreto;
+
+    private Integer numeroGanadorSecreto;
 
 
     public void agregarNumeroApostado(NumeroApostado numeroApostado) {
@@ -50,6 +50,7 @@ public class Sorteo implements Serializable {
         apuestas.remove(apuesta);
         apuesta.setSorteo(null);
     }
+
 
 
 

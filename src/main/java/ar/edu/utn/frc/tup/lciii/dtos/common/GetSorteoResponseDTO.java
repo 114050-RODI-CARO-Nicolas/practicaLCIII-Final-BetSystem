@@ -1,4 +1,4 @@
-package ar.edu.utn.frc.tup.lciii.domain;
+package ar.edu.utn.frc.tup.lciii.dtos.common;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +14,8 @@ import java.util.List;
 @Getter
 public class GetSorteoResponseDTO implements Serializable {
 
+
+    private Long id;
     private LocalDate fecha;
     private int totalEnReserva;
 
