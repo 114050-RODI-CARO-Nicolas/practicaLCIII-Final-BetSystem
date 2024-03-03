@@ -12,7 +12,7 @@ import java.util.List;
 
 @Setter
 @Getter
-public class GetSorteoResponseDTO implements Serializable {
+public class SorteoResponseDTO implements Serializable {
 
 
     private Long id;

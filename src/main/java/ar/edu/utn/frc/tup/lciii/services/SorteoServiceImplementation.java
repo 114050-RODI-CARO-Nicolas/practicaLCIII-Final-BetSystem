@@ -2,11 +2,10 @@ package ar.edu.utn.frc.tup.lciii.services;
 
 
 import ar.edu.utn.frc.tup.lciii.domain.Apuesta;
-import ar.edu.utn.frc.tup.lciii.dtos.common.GetSorteoResponseDTO;
+import ar.edu.utn.frc.tup.lciii.dtos.common.SorteoResponseDTO;
 import ar.edu.utn.frc.tup.lciii.dtos.common.*;
 import ar.edu.utn.frc.tup.lciii.domain.NumeroApostado;
 import ar.edu.utn.frc.tup.lciii.domain.Sorteo;
-import ar.edu.utn.frc.tup.lciii.dtos.common.NuevoSorteoResponseDTO;
 import ar.edu.utn.frc.tup.lciii.repositories.ApuestaRepository;
 import ar.edu.utn.frc.tup.lciii.repositories.NumeroRepository;
 import ar.edu.utn.frc.tup.lciii.repositories.SorteoRepository;
@@ -32,7 +31,7 @@ public class SorteoServiceImplementation implements ISorteoService {
 
     LocalDate localDate= LocalDate.now();
     @Override
-    public NuevoSorteoResponseDTO altaSorteo() {
+    public SorteoResponseDTO altaSorteo() {
         Sorteo nuevoSorteo=new Sorteo();
         nuevoSorteo.setFecha(localDate);
         nuevoSorteo.setNumeroGanadorSecreto(generateRandomFiveDigitInt());
@@ -40,16 +39,15 @@ public class SorteoServiceImplementation implements ISorteoService {
         sorteoRepository.save(nuevoSorteo);
 
 
-        NuevoSorteoResponseDTO responseDTO = new NuevoSorteoResponseDTO();
+        SorteoResponseDTO responseDTO = new SorteoResponseDTO();
         responseDTO.setId(nuevoSorteo.getId());
         responseDTO.setFecha(nuevoSorteo.getFecha());
-        responseDTO.setId(nuevoSorteo.getId());
         responseDTO.setTotalEnReserva(nuevoSorteo.getTotalEnReserva());
         return responseDTO;
     };
 
     @Override
-    public ResponseAltaApuestaDTO altaApuesta(RequestAltaApuestaDTO requestAltaApuestaDTO) {
+    public ResponseApuestaDTO altaApuesta(RequestAltaApuestaDTO requestAltaApuestaDTO) {
 
         try {
             Sorteo sorteoEncontrado=sorteoRepository.findByFecha(requestAltaApuestaDTO.getFecha_sorteo());
@@ -69,7 +67,7 @@ public class SorteoServiceImplementation implements ISorteoService {
 
 
 
-            ResponseAltaApuestaDTO responseDTO=new ResponseAltaApuestaDTO();
+            ResponseApuestaDTO responseDTO=new ResponseApuestaDTO();
             responseDTO.setFecha_sorteo(sorteoEncontrado.getFecha());
             responseDTO.setMontoApostado(apuesta.getMontoApostado());
             responseDTO.setId_cliente(apuesta.getId_cliente());
@@ -121,20 +119,70 @@ public class SorteoServiceImplementation implements ISorteoService {
 
         }
 
-
-
-
     }
 
     @Override
-    public List<GetSorteoResponseDTO> obtenerTodosLosSorteos() {
+    public List<ResponseApuestaDTO> obtenerTodasLasApuestas()
+    {
+        List<Apuesta> apuestas = apuestaRepository.findAll();
+        List<ResponseApuestaDTO> responseDTOList = new ArrayList<>();
+
+        for (Apuesta apuesta: apuestas)
+        {
+            ResponseApuestaDTO responseDTO = new ResponseApuestaDTO();
+            responseDTO.setFecha_sorteo(apuesta.getSorteo().getFecha());
+            responseDTO.setId_cliente(apuesta.getId_cliente());
+            responseDTO.setNumero(apuesta.getNumeroApostado());
+            responseDTO.setMontoApostado(apuesta.getMontoApostado());
+
+            if(compararCifras(apuesta.getSorteo().getNumeroGanadorSecreto(), apuesta.getNumeroApostado()) >= 2 )
+            {
+                responseDTO.setResultado("GANADOR");
+            } else {
+                responseDTO.setResultado("Pierde...");
+            }
+            responseDTOList.add(responseDTO);
+
+
+
+        }
+
+        return responseDTOList;
+
+
+    };
+
+    @Override
+    public ResponseApuestaDTO obtenerApuestaPorId(Long idApuesta)
+    {
+        Apuesta apuestaEncontrada = apuestaRepository.findById(idApuesta).orElseThrow( ()->  new EntityNotFoundException("Source: SorteoServiceImp.obtenerApuestaPorId() "));
+
+        ResponseApuestaDTO responseDTO = new ResponseApuestaDTO();
+        responseDTO.setFecha_sorteo(apuestaEncontrada.getSorteo().getFecha());
+        responseDTO.setId_cliente(apuestaEncontrada.getId_cliente());
+        responseDTO.setNumero(apuestaEncontrada.getNumeroApostado());
+        responseDTO.setMontoApostado(apuestaEncontrada.getMontoApostado());
+
+        if(compararCifras(apuestaEncontrada.getSorteo().getNumeroGanadorSecreto(), apuestaEncontrada.getNumeroApostado()) >= 2 )
+        {
+            responseDTO.setResultado("GANADOR");
+        } else {
+            responseDTO.setResultado("Pierde...");
+        }
+        return responseDTO;
+    }
+
+
+
+    @Override
+    public List<SorteoResponseDTO> obtenerTodosLosSorteos() {
 
       List<Sorteo> sorteos=sorteoRepository.findAll();
-      List<GetSorteoResponseDTO> responseDTOList = new ArrayList<>();
+      List<SorteoResponseDTO> responseDTOList = new ArrayList<>();
 
         for (Sorteo sorteo:sorteos
              ) {
-            GetSorteoResponseDTO responseDTO = new GetSorteoResponseDTO();
+            SorteoResponseDTO responseDTO = new SorteoResponseDTO();
             responseDTO.setId(sorteo.getId());
             responseDTO.setFecha(sorteo.getFecha());
             responseDTO.setTotalEnReserva(sorteo.getTotalEnReserva());
@@ -184,10 +232,10 @@ public class SorteoServiceImplementation implements ISorteoService {
 
 
 
-    public GetSorteoResponseDTO obtenerSorteoPorFecha(LocalDate fecha){
+    public SorteoResponseDTO obtenerSorteoPorFecha(LocalDate fecha){
 
         Sorteo sorteoEncontrado = sorteoRepository.findByFecha(fecha);
-        GetSorteoResponseDTO responseDTO = new GetSorteoResponseDTO();
+        SorteoResponseDTO responseDTO = new SorteoResponseDTO();
         responseDTO.setId(sorteoEncontrado.getId());
         responseDTO.setFecha(sorteoEncontrado.getFecha());
         responseDTO.setTotalEnReserva(sorteoEncontrado.getTotalEnReserva());
@@ -205,6 +253,69 @@ public class SorteoServiceImplementation implements ISorteoService {
 
 
     }
+
+    @Override
+    public SorteoResponseDTO modificarSorteoPorFecha(LocalDate fecha_sorteo, SorteoForUpdateDTO sorteoForUpdateDTO)
+    {
+        Sorteo sorteoEncontrado = sorteoRepository.findByFecha(fecha_sorteo);
+            if(sorteoEncontrado==null){
+                throw new EntityNotFoundException("Source: SorteoServiceImp - modificarSorteoPorFecha()");
+            };
+            if(sorteoForUpdateDTO.getFecha()!=null){
+                sorteoEncontrado.setFecha(sorteoForUpdateDTO.getFecha());
+            };
+            sorteoRepository.save(sorteoEncontrado);
+
+            SorteoResponseDTO responseDTO = new SorteoResponseDTO();
+            responseDTO.setId(sorteoEncontrado.getId());
+            responseDTO.setFecha(sorteoEncontrado.getFecha());
+            responseDTO.setTotalEnReserva(sorteoEncontrado.getTotalEnReserva());
+            List<NumeroApostado> numeroApostadoList = sorteoEncontrado.getNumerosApostados();
+
+            for (NumeroApostado numeroApostado:numeroApostadoList
+            ) {
+
+                HashMap<Long, Integer> numeroApostadoHashmap = new HashMap<>();
+                numeroApostadoHashmap.put(numeroApostado.getId(), numeroApostado.getNumero());
+                responseDTO.agregarNumeroSorteado(numeroApostadoHashmap);
+            }
+            return responseDTO;
+
+    }
+
+    @Override
+    public boolean borrarSorteoPorFecha(LocalDate fecha)
+    {
+
+        boolean deletedSuccesfully=false;
+
+        try{
+            Sorteo sorteoEncontrado = sorteoRepository.findByFecha(fecha);
+            if(sorteoEncontrado==null){
+                throw new EntityNotFoundException("Source: SorteoServiceImp - borrarSorteoPorFecha()");
+            };
+            sorteoRepository.delete(sorteoEncontrado);
+
+
+            deletedSuccesfully=true;
+        }
+        catch (EntityNotFoundException ex){
+            throw ex;
+        }
+        catch (Exception ex){
+            throw ex;
+        }
+
+
+        return deletedSuccesfully;
+
+    };
+
+
+
+
+
+
 
     //UTILS
 

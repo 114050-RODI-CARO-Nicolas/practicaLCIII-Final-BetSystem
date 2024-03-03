@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface ApuestaRepository extends JpaRepository<Apuesta, Long> {
 
 
+
+
 }

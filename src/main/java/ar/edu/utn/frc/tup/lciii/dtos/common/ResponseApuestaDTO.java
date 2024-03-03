@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-public class ResponseAltaApuestaDTO implements Serializable {
+public class ResponseApuestaDTO implements Serializable {
 
     LocalDate fecha_sorteo;
     String id_cliente;

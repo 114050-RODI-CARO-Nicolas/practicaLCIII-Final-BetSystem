@@ -2,10 +2,7 @@ package ar.edu.utn.frc.tup.lciii.services;
 
 
 import ar.edu.utn.frc.tup.lciii.domain.Sorteo;
-import ar.edu.utn.frc.tup.lciii.dtos.common.InfoApuestasGanadasDTO;
-import ar.edu.utn.frc.tup.lciii.dtos.common.NuevoSorteoResponseDTO;
-import ar.edu.utn.frc.tup.lciii.dtos.common.RequestAltaApuestaDTO;
-import ar.edu.utn.frc.tup.lciii.dtos.common.ResponseAltaApuestaDTO;
+import ar.edu.utn.frc.tup.lciii.dtos.common.*;
 import ar.edu.utn.frc.tup.lciii.repositories.ApuestaRepository;
 import ar.edu.utn.frc.tup.lciii.repositories.NumeroRepository;
 import ar.edu.utn.frc.tup.lciii.repositories.SorteoRepository;
@@ -23,8 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import org.mockito.ArgumentMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
 public class SorteoServiceTest {
@@ -48,7 +43,7 @@ public class SorteoServiceTest {
     public void chequearSiNuevoSorteoRetornaDTOrespuesta()
     {
 
-        NuevoSorteoResponseDTO mockResponseDTO = sorteoServiceImplementation.altaSorteo();
+        SorteoResponseDTO mockResponseDTO = sorteoServiceImplementation.altaSorteo();
         assertNotNull(mockResponseDTO);
 
 
@@ -73,7 +68,7 @@ public class SorteoServiceTest {
 
         when(sorteoRepository.findByFecha(any(LocalDate.class))).thenReturn(mockSorteoEncontrado);
 
-        ResponseAltaApuestaDTO responseDTO = sorteoServiceImplementation.altaApuesta(requestDTO);
+        ResponseApuestaDTO responseDTO = sorteoServiceImplementation.altaApuesta(requestDTO);
 
         assertNotNull(responseDTO);
         assertEquals( 100, responseDTO.getMontoApostado());

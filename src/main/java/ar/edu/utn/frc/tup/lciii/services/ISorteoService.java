@@ -1,22 +1,35 @@
 package ar.edu.utn.frc.tup.lciii.services;
 
 
-import ar.edu.utn.frc.tup.lciii.dtos.common.GetSorteoResponseDTO;
-import ar.edu.utn.frc.tup.lciii.dtos.common.InfoApuestasGanadasDTO;
-import ar.edu.utn.frc.tup.lciii.dtos.common.NuevoSorteoResponseDTO;
-import ar.edu.utn.frc.tup.lciii.dtos.common.RequestAltaApuestaDTO;
-import ar.edu.utn.frc.tup.lciii.dtos.common.ResponseAltaApuestaDTO;
+import ar.edu.utn.frc.tup.lciii.domain.Apuesta;
+import ar.edu.utn.frc.tup.lciii.dtos.common.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ISorteoService {
 
-    NuevoSorteoResponseDTO altaSorteo();
-    ResponseAltaApuestaDTO altaApuesta(RequestAltaApuestaDTO requestAltaApuestaDTO0);
+    SorteoResponseDTO altaSorteo();
 
-    List<GetSorteoResponseDTO> obtenerTodosLosSorteos();
+    List<SorteoResponseDTO> obtenerTodosLosSorteos();
+
+    SorteoResponseDTO obtenerSorteoPorFecha(LocalDate fecha);
+
+    SorteoResponseDTO modificarSorteoPorFecha(LocalDate fecha_sorteo, SorteoForUpdateDTO sorteoForUpdateDTO);
+
+    boolean borrarSorteoPorFecha(LocalDate fecha);
+
+    ResponseApuestaDTO altaApuesta(RequestAltaApuestaDTO requestAltaApuestaDTO0);
+
+    List<ResponseApuestaDTO> obtenerTodasLasApuestas();
+
+    ResponseApuestaDTO obtenerApuestaPorId(Long idApuesta);
 
     InfoApuestasGanadasDTO obtenerInfoApuestasGanadas(long idSorteo);
+
+
+
+
 
 
 
